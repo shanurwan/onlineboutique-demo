@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Deploy the stock app
+resources:
+  - ../../kubernetes-manifests
+  - ./ingress.yaml
+
+# Force everything into this namespace (kustomize will add it if missing)
+namespace: boutique
+
+# safe to keep or remove
+patches:
+  - target:
+      kind: Deployment
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 3

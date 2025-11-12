@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: boutique-frontend
+  namespace: boutique
+  annotations:
+    cert-manager.io/cluster-issuer: aies-scicom-dev
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.org/client-max-body-size: 10M
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - boutique.playground.aies.scicom.dev
+      secretName: boutique-tls
+  rules:
+    - host: boutique.playground.aies.scicom.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-external
+                port:
+                  number: 80

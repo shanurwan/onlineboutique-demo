@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: online-boutique
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: online-boutique
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/<your-username>/onlineboutique-demo.git
+    targetRevision: main
+    # where the app manifests live inside this repo:
+    path: kubernetes-manifests
+    # or: path: release  if you prefer using release/kubernetes-manifests.yaml via kustomize/helm/etc.
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: online-boutique
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
